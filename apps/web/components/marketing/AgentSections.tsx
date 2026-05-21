@@ -1,6 +1,15 @@
 import { MoneyCell, StatusPill, ToolCallChip } from "@stoa/ui";
 
-const agents = [
+type Agent = {
+  no: string;
+  name: string;
+  headline: string;
+  body: string;
+  demo: "triage" | "diagnosis" | "dispatch" | "ledger";
+  badge?: string;
+};
+
+const agents: readonly Agent[] = [
   {
     no: "01",
     name: "Triage",
@@ -30,7 +39,7 @@ const agents = [
     body: "Double-entry from day one. Every payment matched to an invoice, every late fee calculated against your lease policy and California's § 1671 reasonableness test, every owner statement reconcilable to the cent. If something looks wrong, it is — and the ledger will tell you which entry to look at first.",
     demo: "ledger",
   },
-] as const;
+];
 
 export function AgentSections() {
   return (

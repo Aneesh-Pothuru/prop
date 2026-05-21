@@ -16,7 +16,19 @@ import {
 } from "lucide-react";
 import { MoneyCell, StatusPill, ToolCallChip, ComplianceCallout, AgentStream } from "@stoa/ui";
 
-const queue = [
+type QueueItem = {
+  id: string;
+  unit: string;
+  tenant: string;
+  category: string;
+  icon: React.ComponentType<{ className?: string }>;
+  status: "in-progress" | "awaiting-tenant" | "resolved" | "new";
+  snippet: string;
+  ageMin: number;
+  selected?: boolean;
+};
+
+const queue: readonly QueueItem[] = [
   {
     id: "CLM-2417",
     unit: "2417 Telegraph · B",
@@ -58,7 +70,7 @@ const queue = [
     snippet: "Dishwasher leaving residue on glasses…",
     ageMin: 5,
   },
-] as const;
+];
 
 const ledger = [
   { date: "Mar 1", desc: "Invoice posted · Mar rent", ref: "2417 Telegraph B", cents: 240000, kind: "debit" as const },
