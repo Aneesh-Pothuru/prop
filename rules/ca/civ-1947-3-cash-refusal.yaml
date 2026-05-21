@@ -1,0 +1,41 @@
+# Civil Code § 1947.3 — Cash payment of rent.
+# Landlord must accept at least one form of payment that is NOT cash or
+# electronic funds transfer, UNLESS the tenant has previously paid with
+# a check that was dishonored. Practically: PMs must allow check or
+# money order even if they prefer ACH/card.
+
+id: civ-1947-3.cash-and-check
+citation: "Civ. § 1947.3"
+title: Must accept a non-electronic, non-cash payment method
+effective_date: 2014-01-01
+jurisdictions: [ca]
+applies_to:
+  - lease.draft
+  - lease.update
+  - org.payment_settings
+
+severity: warning
+
+inputs:
+  - lease.accepted_payment_methods       # ["ach", "card", "check", ...]
+  - lease.cash_dishonor_history          # boolean
+
+logic: |
+  const methods = lease.accepted_payment_methods ?? [];
+  const hasNonElectronicNonCash =
+    methods.includes("check") || methods.includes("money_order");
+  const passes = hasNonElectronicNonCash || lease.cash_dishonor_history === true;
+  return {
+    passes,
+    reason: passes ? null : "Civ. § 1947.3 requires accepting at least one non-electronic, non-cash method (check or money order)."
+  };
+
+remediation:
+  - Enable "check" or "money_order" as an accepted payment method on the lease
+
+override_allowed: false
+log_attempts: true
+
+ui:
+  callout_title: "Cash and check acceptance"
+  callout_summary: "Civ. § 1947.3 — at least one non-electronic, non-cash method must be accepted."

@@ -1,0 +1,62 @@
+# AB-1482 — Tenant Protection Act of 2019, as amended by SB-567 (2024).
+# Civil Code § 1947.12 and § 1946.2.
+# Caps annual rent increases at 5% + CPI, with a hard ceiling of 10%.
+# Local CPI values for the 2025-26 cycle are published by HCD each August.
+
+id: ab-1482.rent-cap
+citation: "Civ. § 1947.12 (AB-1482 / SB-567)"
+title: Annual rent increase may not exceed 5% + CPI or 10%, whichever is lower
+effective_date: 2020-01-01
+last_updated: 2025-08-01
+jurisdictions: [ca]
+applies_to:
+  - lease.renew
+  - lease.rent_increase
+
+severity: blocking
+
+# CPI values are loaded at runtime from rules/ca/_data/ab-1482-cpi.json
+# keyed by jurisdiction region. As of August 2025:
+#   LA-OC-IE region:  3.0%  → cap 8.0%
+#   Bay Area region:  1.3%  → cap 6.3%
+#   default CA:       3.0%  → cap 8.0% (HCD-published)
+inputs:
+  - lease.current_rent_cents
+  - lease.proposed_rent_cents
+  - lease.jurisdiction_city
+  - lease.unit.property.year_built
+  - lease.unit.property.type
+  - lease.tenant.move_in_date
+
+# Exemptions per § 1947.12(d)
+exemptions:
+  - condition: "lease.unit.property.year_built > (current_year - 15)"
+    reason: "New construction <15 years exempt"
+  - condition: "lease.unit.property.type === 'single_family' && lease.unit.property.owner.is_corporation === false"
+    reason: "SFR owned by individual/LLC of individuals exempt (with proper notice)"
+  - condition: "lease.unit.property.is_subsidized === true"
+    reason: "Deed-restricted affordable housing exempt"
+
+logic: |
+  if (isExempt(lease)) return { passes: true, exempt: true };
+  const cpi = lookupCpiForJurisdiction(lease.jurisdiction_city);
+  const cap = Math.min(0.05 + cpi, 0.10);
+  const increase = (lease.proposed_rent_cents - lease.current_rent_cents) / lease.current_rent_cents;
+  const passes = increase <= cap;
+  return {
+    passes,
+    reason: passes
+      ? null
+      : `Proposed increase of ${pct(increase)} exceeds AB-1482 cap of ${pct(cap)} for ${lease.jurisdiction_city ?? 'CA default'}.`
+  };
+
+remediation:
+  - Lower the proposed increase to at most {{cap}}%
+  - If exempt, document the exemption category on the lease
+
+override_allowed: false
+log_attempts: true
+
+ui:
+  callout_title: "AB-1482 rent cap"
+  callout_summary: "Annual increase is limited to 5% + CPI or 10%, whichever is lower."

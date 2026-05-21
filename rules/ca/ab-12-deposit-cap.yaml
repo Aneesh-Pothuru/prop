@@ -1,0 +1,54 @@
+# AB-12 — Security deposit cap (effective July 1, 2024)
+# Civil Code § 1950.5 as amended.
+# Limits security deposits to one month's rent for most landlords.
+# Small-landlord exemption: 2× monthly rent if landlord (a) is a natural
+# person or LLC of natural persons, and (b) owns no more than 2 residential
+# rental properties with no more than 4 total units.
+# Service-member tenants are not subject to the small-landlord exemption.
+
+id: ab-12.deposit-cap
+citation: "Civ. § 1950.5 (as amended by AB-12)"
+title: Security deposit may not exceed one month's rent
+effective_date: 2024-07-01
+jurisdictions: [ca]
+applies_to:
+  - lease.draft
+  - lease.update
+  - lease.send
+
+severity: blocking
+
+inputs:
+  - lease.monthly_rent_cents
+  - lease.deposit_cents
+  - lease.unit.property.owner.is_natural_person
+  - lease.unit.property.owner.unit_count_total
+  - lease.tenant.is_service_member
+
+logic: |
+  const isExempt =
+    !lease.tenant.is_service_member
+    && lease.unit.property.owner.is_natural_person
+    && lease.unit.property.owner.unit_count_total <= 4
+    && lease.unit.property.owner.property_count_residential <= 2;
+  const cap = isExempt
+    ? 2 * lease.monthly_rent_cents
+    : 1 * lease.monthly_rent_cents;
+  const passes = lease.deposit_cents <= cap;
+  return {
+    passes,
+    reason: passes
+      ? null
+      : `Deposit ${formatMoney(lease.deposit_cents)} exceeds the ${isExempt ? '2× ' : ''}1-month cap of ${formatMoney(cap)}.`
+  };
+
+remediation:
+  - Reduce deposit to one month's rent ({{cap}} or below)
+  - If small-landlord exemption applies, document it on the lease
+
+override_allowed: false  # statute is hard-blocking
+log_attempts: true
+
+ui:
+  callout_title: "Security deposit cap"
+  callout_summary: "Civ. § 1950.5 limits residential deposits to one month's rent (two months for small landlords)."

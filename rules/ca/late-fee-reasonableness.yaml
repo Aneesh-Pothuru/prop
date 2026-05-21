@@ -1,0 +1,60 @@
+# Civil Code § 1671 — Liquidated-damages reasonableness.
+# Orozco v. Casimiro (2004) — late fees on rent must be a reasonable estimate
+# of actual damages. CA caselaw and CAA guidance generally treat 5–6% of
+# monthly rent (or a flat amount close to that) as the safe ceiling.
+# SB-611 (2024) further banned several "junk fees" tied to rent processing.
+
+id: civ-1671.late-fee-reasonableness
+citation: "Civ. § 1671 (Orozco v. Casimiro)"
+title: Late fees must be a reasonable estimate of damages
+effective_date: 2004-01-01
+last_updated: 2024-07-01
+jurisdictions: [ca]
+applies_to:
+  - lease.draft
+  - lease.update
+  - payment.assess_late_fee
+
+severity: warning  # the statute is reasonableness-based; we warn rather than hard-block
+
+# Soft ceilings; PM can override with documented reason logged to audit.
+ceilings:
+  pct_of_monthly_rent: 0.06        # 6%
+  flat_max_cents: 5000             # $50 default ceiling (jurisdictionally permissive)
+  grace_days_min: 3                # § 1947.3 reasonableness; lease custom permitted >0
+
+inputs:
+  - lease.monthly_rent_cents
+  - lease.late_fee_policy.type     # "flat" | "pct"
+  - lease.late_fee_policy.value    # cents OR decimal
+  - lease.late_fee_policy.grace_days
+
+logic: |
+  const policy = lease.late_fee_policy;
+  let effectivePct;
+  if (policy.type === "flat") {
+    effectivePct = policy.value / lease.monthly_rent_cents;
+  } else {
+    effectivePct = policy.value;
+  }
+  const passesPct = effectivePct <= ceilings.pct_of_monthly_rent;
+  const passesGrace = (policy.grace_days ?? 0) >= ceilings.grace_days_min;
+  const passes = passesPct && passesGrace;
+  return {
+    passes,
+    reason: passes
+      ? null
+      : `Late fee of ${pct(effectivePct)} of monthly rent (grace ${policy.grace_days}d) may exceed Orozco reasonableness. Consider 5% with a 5-day grace.`
+  };
+
+remediation:
+  - Drop the fee to 5–6% of monthly rent or below
+  - Provide at least a 3-day grace period
+
+override_allowed: true
+override_requires_reason: true
+log_attempts: true
+
+ui:
+  callout_title: "Late fee reasonableness"
+  callout_summary: "Civ. § 1671 (Orozco) requires late fees to reflect actual damages. 5% with a 3+ day grace period is the defensible ceiling."

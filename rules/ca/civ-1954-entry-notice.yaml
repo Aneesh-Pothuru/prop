@@ -1,0 +1,44 @@
+# Civil Code § 1954 — Landlord/PM right of entry requires advance notice.
+# 24 hours written notice for non-emergency entry, during normal business
+# hours unless tenant consents otherwise. Reasons are limited and enumerated.
+
+id: civ-1954.entry-notice
+citation: "Civ. § 1954"
+title: 24-hour written notice required for non-emergency entry
+effective_date: 1996-01-01
+jurisdictions: [ca]
+applies_to:
+  - entry.schedule
+  - vendor.dispatch
+  - inspection.create
+
+severity: blocking
+
+inputs:
+  - entry.scheduled_at
+  - entry.purpose             # "repair" | "inspection" | "showing" | "emergency"
+  - entry.tenant_consent
+  - entry.notice_delivered_at
+
+logic: |
+  if (entry.purpose === "emergency") return { passes: true };
+  if (entry.tenant_consent === true) return { passes: true };
+  const hoursNotice = (entry.scheduled_at - (entry.notice_delivered_at ?? Date.now())) / 3600_000;
+  const passes = hoursNotice >= 24;
+  return {
+    passes,
+    reason: passes
+      ? null
+      : `Entry scheduled in ${Math.round(hoursNotice)}h but no tenant consent — need 24h written notice.`
+  };
+
+remediation:
+  - Delay entry to at least 24h after notice
+  - Obtain explicit tenant consent in writing
+
+override_allowed: false  # safety + privacy statute
+log_attempts: true
+
+ui:
+  callout_title: "24-hour entry notice"
+  callout_summary: "Civ. § 1954 requires 24 hours written notice for any non-emergency entry."
