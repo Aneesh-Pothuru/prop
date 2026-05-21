@@ -57,3 +57,6 @@ docs/research/.drafts/
 
 # OS
 Thumbs.db
+
+# Local screenshot cache (committed selectively when reviewing in chat)
+.screens/
