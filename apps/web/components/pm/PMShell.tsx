@@ -16,6 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { cn } from "@stoa/ui";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const items = [
   { href: "/pm", label: "Dashboard", icon: LayoutDashboard },
@@ -37,7 +38,7 @@ export function PMShell({ children }: { children: React.ReactNode }) {
           </Link>
           <button
             aria-label="Workspace switcher"
-            className="rounded-md p-1 hover:bg-cream-100"
+            className="rounded-md p-1 hover:bg-cream-100 dark:hover:bg-ink-700"
           >
             <ChevronsUpDown className="h-3.5 w-3.5 text-text-muted" />
           </button>
@@ -61,7 +62,7 @@ export function PMShell({ children }: { children: React.ReactNode }) {
                     "group relative flex items-center justify-between rounded-md px-2 py-1.5 text-[13px] transition-colors duration-120",
                     active
                       ? "bg-brass-100/60 text-text-primary"
-                      : "text-text-secondary hover:bg-cream-100"
+                      : "text-text-secondary hover:bg-cream-100 dark:hover:bg-ink-700"
                   )}
                 >
                   {active ? (
@@ -109,11 +110,12 @@ export function PMShell({ children }: { children: React.ReactNode }) {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <button aria-label="Notifications" className="relative rounded-md p-1.5 hover:bg-cream-100">
+            <ThemeToggle />
+            <button aria-label="Notifications" className="relative rounded-md p-1.5 hover:bg-cream-100 dark:hover:bg-ink-700">
               <Bell className="h-4 w-4 text-text-secondary" />
               <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-brass-500" />
             </button>
-            <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-cream-100">
+            <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-cream-100 dark:hover:bg-ink-700">
               <div className="h-6 w-6 rounded-full bg-brass-300 flex items-center justify-center font-medium text-[11px] text-ink-900">
                 JH
               </div>

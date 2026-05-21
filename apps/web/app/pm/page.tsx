@@ -44,7 +44,7 @@ export default function PMDashboard() {
         <div className="flex items-center gap-3">
           <Link
             href="/pm/claims"
-            className="rounded-md border border-[var(--border-subtle)] px-3 py-1.5 text-[13px] text-text-secondary hover:bg-cream-50"
+            className="rounded-md border border-[var(--border-subtle)] px-3 py-1.5 text-[13px] text-text-secondary hover:bg-cream-50 dark:hover:bg-ink-800"
           >
             Open inbox
           </Link>
@@ -104,7 +104,7 @@ export default function PMDashboard() {
               <Link
                 href={`/pm/claims/${c.id.toLowerCase()}`}
                 key={c.id}
-                className="relative grid grid-cols-[140px_1fr_180px_120px_auto] items-center px-5 py-3 hover:bg-cream-50 transition-colors duration-120 group"
+                className="relative grid grid-cols-[140px_1fr_180px_120px_auto] items-center px-5 py-3 hover:bg-cream-50 dark:hover:bg-ink-800 transition-colors duration-120 group"
               >
                 <span className="absolute left-0 top-0 h-full w-[2px] bg-brass-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div>
@@ -200,10 +200,10 @@ export default function PMDashboard() {
               <button className="rounded-md bg-brass-500 px-3 py-2 text-[13px] font-medium text-ink-900 hover:bg-brass-600">
                 Approve and dispatch
               </button>
-              <button className="rounded-md border border-[var(--border-subtle)] px-3 py-2 text-[13px] text-text-secondary hover:bg-white">
+              <button className="rounded-md border border-[var(--border-subtle)] px-3 py-2 text-[13px] text-text-secondary hover:bg-white dark:hover:bg-ink-800">
                 Suggest alternates
               </button>
-              <button className="rounded-md px-3 py-2 text-[13px] text-text-secondary hover:bg-cream-100">
+              <button className="rounded-md px-3 py-2 text-[13px] text-text-secondary hover:bg-cream-100 dark:hover:bg-ink-700">
                 View full diagnosis
               </button>
             </div>

@@ -49,10 +49,10 @@ export default function ClaimDetail() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button className="rounded-md border border-[var(--border-subtle)] px-3 py-1.5 text-[13px] text-text-secondary hover:bg-cream-50">
+          <button className="rounded-md border border-[var(--border-subtle)] px-3 py-1.5 text-[13px] text-text-secondary hover:bg-cream-50 dark:hover:bg-ink-800">
             Reverse last action
           </button>
-          <button className="rounded-md border border-[var(--border-subtle)] px-3 py-1.5 text-[13px] text-text-secondary hover:bg-cream-50">
+          <button className="rounded-md border border-[var(--border-subtle)] px-3 py-1.5 text-[13px] text-text-secondary hover:bg-cream-50 dark:hover:bg-ink-800">
             Call tenant
           </button>
           <button className="rounded-md bg-brass-500 px-3 py-1.5 text-[13px] font-medium text-ink-900 hover:bg-brass-600">
@@ -128,7 +128,7 @@ export default function ClaimDetail() {
                 <ToolCallChip name="compliance.scan_language" latencyMs={88} />
               </div>
               <div className="flex gap-2">
-                <button className="rounded-md px-3 py-1.5 text-[13px] text-text-secondary hover:bg-white">
+                <button className="rounded-md px-3 py-1.5 text-[13px] text-text-secondary hover:bg-white dark:hover:bg-ink-800">
                   Save draft
                 </button>
                 <button className="rounded-md bg-brass-500 px-3 py-1.5 text-[13px] font-medium text-ink-900 hover:bg-brass-600">

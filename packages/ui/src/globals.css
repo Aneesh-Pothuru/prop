@@ -137,6 +137,34 @@
   }
 }
 
+/* Dark-mode bridges for hardcoded creams/whites used in PM surfaces.
+   Lets us paint a dense light dashboard without rewriting every utility.
+   Tenant + marketing surfaces use semantic vars and are unaffected. */
+[data-theme="dark"][data-surface="pm"] .bg-cream-50,
+[data-theme="dark"] [data-surface="pm"] .bg-cream-50 {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+[data-theme="dark"][data-surface="pm"] .bg-cream-100,
+[data-theme="dark"] [data-surface="pm"] .bg-cream-100 {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+[data-theme="dark"][data-surface="pm"] .bg-white,
+[data-theme="dark"] [data-surface="pm"] .bg-white {
+  background-color: var(--surface-paper);
+}
+[data-theme="dark"][data-surface="pm"] .bg-cream-50\/40,
+[data-theme="dark"] [data-surface="pm"] .bg-cream-50\/40 {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+[data-theme="dark"][data-surface="pm"] .bg-cream-50\/50,
+[data-theme="dark"] [data-surface="pm"] .bg-cream-50\/50 {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+[data-theme="dark"][data-surface="pm"] .bg-cream-50\/60,
+[data-theme="dark"] [data-surface="pm"] .bg-cream-50\/60 {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
 @layer utilities {
   .tabular { font-variant-numeric: tabular-nums; }
   .balance { text-wrap: balance; }
